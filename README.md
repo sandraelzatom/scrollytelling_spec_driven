@@ -68,14 +68,17 @@ Every real task in this repo runs through the same seven-step loop — once for 
 
 5. **Pre-flight QA.** *"QA `docs/phases/NN-name.md` and update it with any relevant information from the current codebase to prepare it for implementation."*
 6. **Implement.** One phase, one session, thumb on the nozzle.
-7. **Exit QA.** *"QA this phase to ensure that 100% of the phase objectives are met."*
+    - **6a. Tests.** Unit / integration / e2e covering positive, negative, edge, and golden-path cases. Every spec gets a golden-path e2e; every objective gets a test as its exit check. Matrix: [docs/specs/07-testing.md](docs/specs/07-testing.md).
+7. **Exit QA.** *"QA this phase to ensure that 100% of the phase objectives are met."* Lint, unit, build, and e2e all green.
+    - **7.5. Audit pass** (recommended for non-trivial phases). Knuth / Clean Code / Gang of Four reading passes. Each finding dispositioned as **blocker**, **backlog**, or **wontfix**.
 
 If step 7 fails, you do not move on — you loop back to step 5 (or further). That is why it is a *control loop* and not a checklist.
 
 Two ideas do most of the work:
 
-- **100% coverage as an explicit target.** Every spec has a phase; every phase objective has a runnable check. Gaps are failures.
+- **100% coverage as an explicit target.** Every spec has a phase; every phase objective has a runnable check; every spec has a golden-path e2e test. Gaps are failures.
 - **Pre-flight QA.** Reading the codebase against the plan *before* touching it catches drift before the AI has a chance to invent around it.
+- **Tests as durable exit checks + audits as planned reading passes.** Tests (positive, negative, edge, golden) fight regression and enable refactoring. Audits (Knuth / Clean Code / GoF) answer *"is it any good?"* after correctness is settled.
 
 ## Project layout
 
@@ -104,10 +107,11 @@ Run the [control loop](#the-control-loop) once per phase:
 
 1. Read [docs/phases/README.md](docs/phases/README.md) and check `STATUS.md` for the next pending phase.
 2. **Pre-flight QA** the phase file against the current codebase (loop step 5).
-3. **Implement** the phase (loop step 6).
-4. **Exit QA** — run every exit check; mark pass/fail (loop step 7).
-5. Fill in the Completion notes. Update `STATUS.md`.
-6. Commit. Repeat.
+3. **Implement** the phase with tests (loop steps 6 + 6a).
+4. **Exit QA** — `npm run lint && npm run test && npm run build && npm run test:e2e` all green (loop step 7).
+5. **Audit pass** for non-trivial phases — Knuth / Clean Code / GoF (loop step 7.5).
+6. Fill in the Completion notes and Audit findings. Update `STATUS.md`.
+7. Commit. Repeat.
 
 Copy-pasteable prompts for each step: [docs/guide/07-prompt-templates.md](docs/guide/07-prompt-templates.md).
 

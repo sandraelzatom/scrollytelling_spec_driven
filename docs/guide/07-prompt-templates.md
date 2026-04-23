@@ -54,19 +54,61 @@ Copy-pasteable versions of the seven prompts that make up [the control loop](03-
 
 **Mode:** narrow jet. Thumb pressed down.
 
+### 6a. Tests
+
+Run after (or alongside) each objective in step 6. Testing conventions for this repo: [../specs/07-testing.md](../specs/07-testing.md).
+
+**Unit tests — positive, negative, edge:**
+
+> For the code changed in this objective, write unit tests that cover: (1) the positive case — typical inputs produce the expected output; (2) the negative case — invalid inputs fail loudly and safely; (3) edge cases — empty, zero, unicode, timezones, and any off-by-one boundaries you can identify. Do not test library internals. Place tests under `tests/unit/` mirroring the source path. All tests must pass.
+
+**Integration tests:**
+
+> Write integration tests that exercise the seam between [module A] and [module B] using real (not mocked) implementations where possible. Cover the happy path and one failure mode of the seam. Tests live in `tests/unit/` if they can run in jsdom, otherwise they belong in `tests/browser/`.
+
+**Golden-path e2e (per spec, not per objective):**
+
+> Write or update a Playwright spec at `tests/browser/[flow].spec.ts` that scripts the headline user journey described in `docs/specs/NN-*.md`. It must: load the built static site, perform the flow end-to-end, and assert the user-visible outcome. This test is the golden path — it must never be deleted to make a build pass.
+
+**Mode:** narrow. Tests are code — same rules: reference existing tests, no invention.
+
 ### 7. Exit QA
 
-> QA phase `NN-name.md` to ensure that 100% of the phase objectives are met. For each objective, run its exit check and report pass or fail. Do not mark the phase complete if any check fails. If a check fails, suggest whether we loop back to step 5 (re-plan), step 6 (keep implementing), or an earlier planning step.
+> QA phase `NN-name.md` to ensure that 100% of the phase objectives are met. For each objective, run its exit check and report pass or fail. Run `npm run lint && npm run test && npm run build && npm run test:e2e` and report results. Do not mark the phase complete if any check fails. If a check fails, suggest whether we loop back to step 5 (re-plan), step 6 (keep implementing), or an earlier planning step.
 
 **Mode:** narrow. Pass/fail only. No vibes.
 
+### 7.5. Audit pass
+
+Optional but recommended after any phase with non-trivial logic or new abstractions. Run each lens you need. Output is a **findings list**, not code changes.
+
+**Knuth — algorithms and correctness:**
+
+> Audit the code changed in phase `NN-name.md` through a Knuth lens. For each non-trivial algorithm: state the invariant, check it holds at loop boundaries, verify termination, and flag any premature optimization. List findings as: `[file:line] — observation — suggested disposition (blocker | backlog | wontfix)`. Do not change code.
+
+**Clean Code / Uncle Bob — readability and structure:**
+
+> Audit the code changed in phase `NN-name.md` through a Clean Code lens. Check: names tell the truth, functions do one thing, responsibilities are separated, SOLID is not violated, no dead code, no misleading comments. List findings as: `[file:line] — observation — suggested disposition (blocker | backlog | wontfix)`. Do not change code.
+
+**Gang of Four — patterns:**
+
+> Audit any new abstractions introduced in phase `NN-name.md` through a Gang-of-Four lens. Is a named pattern a good fit (strategy, factory, observer, adapter, decorator)? Am I reaching for a pattern (singleton, abstract factory) where a plain function or module would do? List findings as: `[file:line] — pattern name or "no pattern needed" — reason — suggested disposition`. Do not change code.
+
+**Dispositioning findings:**
+
+> For the audit findings list above, assign every finding a disposition: **blocker** (fix before closing the phase), **backlog** (file as a follow-up phase or `NOTES.md` entry), or **wontfix** (documented trade-off, include a one-line reason). Record the final dispositioned list in the phase file under `## Audit findings`.
+
+**Mode:** wide on reading, narrow on disposition.
+
 ---
 
-## If step 7 fails
+## If step 7 (or 7.5) fails
 
 You do not move on. You loop back:
 
 - **Objective failed but plan was right** → back to step 6.
+- **Test is missing or wrong** → back to step 6a, then 6.
+- **Audit found a blocker** → back to step 6.
 - **Plan no longer matches reality** → back to step 5.
 - **Spec itself is wrong** → back to step 3, then 4, then 5.
 
@@ -75,4 +117,5 @@ Write down which loopback you did, and why, in the phase file. That note is how 
 ## Keep reading
 
 - The theory behind these prompts: [03-working-with-ai.md](03-working-with-ai.md)
+- Testing matrix and conventions: [../specs/07-testing.md](../specs/07-testing.md)
 - Glossary: [05-glossary.md](05-glossary.md)

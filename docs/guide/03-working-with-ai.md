@@ -129,7 +129,9 @@ The habits above are what you do. This is the order you do them in. Every real t
 
 5. **Pre-flight QA.** *"QA `docs/phases/NN-name.md` and update it with any relevant information from the current codebase to prepare it for implementation."* The plan was written before. Reality has moved. Reconcile before you execute.
 6. **Implement.** One phase, one session, thumb on the nozzle.
-7. **Exit QA.** *"QA this phase to ensure that 100% of the phase objectives are met."* Not a vibe. A list, each item pass or fail.
+    - **6a. Tests.** For each objective, write or update unit / integration / e2e tests covering positive, negative, edge, and (for the spec overall) golden-path cases. See [Tests as durable exit checks](#tests-as-durable-exit-checks).
+7. **Exit QA.** *"QA this phase to ensure that 100% of the phase objectives are met."* Not a vibe. A list, each item pass or fail. The test suite must be green.
+    - **7.5. Audit.** Optional but recommended after non-trivial phases: run a Knuth / Clean Code / Gang-of-Four reading pass. Each finding gets a disposition (blocker, backlog, wontfix). See [Quality audits](#quality-audits--knuth-clean-code-gof).
 
 If step 7 fails, you do not move on — you loop back to step 5 (or further) with what you learned. That is why it is called a control loop and not a checklist.
 
@@ -206,6 +208,50 @@ Bad "checks":
 
 Define the check **before** you start the task. That is the moment your thumb presses down on the nozzle.
 
+## Tests as durable exit checks
+
+An exit check is a *one-time* gate: it runs at the end of a task. An **automated test** is a *perpetual* gate: it runs forever, on every commit. This matters for AI pairing specifically:
+
+- AI regresses what you didn't tell it to preserve. The test suite is the "things already true" memo that never gets truncated.
+- Refactoring without tests is un-auditable. With tests, you can let the AI restructure freely and know within seconds whether it broke something.
+- A **golden-path end-to-end test** is the single best artefact you can hand an AI: *"here is the scripted user journey that must always pass — do not break it."*
+
+Cover four axes at three levels. Each slot blocks a specific kind of regression:
+
+| Level \ Axis | Positive | Negative | Edge | Golden path |
+|---|---|---|---|---|
+| **Unit** | Function returns the right value for typical input | Throws / returns error for bad input | Empty, zero, unicode, TZ, off-by-one | *(n/a at unit level)* |
+| **Integration** | Two modules wire up and produce the expected result | The seam fails safely when one side misbehaves | Concurrency, retries, missing files | *(n/a)* |
+| **E2E** | User can complete the flow in a real browser | Bad routes / missing content degrade gracefully | Keyboard nav, reduced motion, small screens | The headline flow the project exists to deliver |
+
+The operational rule in this course:
+
+- **Every spec gets at least one golden-path e2e test.** If there is no e2e, the spec is not really specified.
+- **Every phase objective gets at least one unit or integration test as its exit check.** Declare them in the phase file, up front, the same way objectives are declared.
+- **A failing test is never "fixed" by deleting the test.** Fix the code, or change the spec and then change the test deliberately.
+
+Testing conventions and the existing test matrix for this repo live in [docs/specs/07-testing.md](../specs/07-testing.md).
+
+## Quality audits — Knuth, Clean Code, GoF
+
+Tests answer *is it correct?* Audits answer *is it any good?* They are planned reading passes at phase boundaries, not per-commit gates.
+
+| Audit | What it asks | When to run |
+|---|---|---|
+| **Knuth** | Is the algorithm right? Do the invariants hold? Am I optimizing something that doesn't need it? | After a phase that introduces non-trivial logic (sort, diff, scheduling, parsing, layout math) |
+| **Clean Code / Uncle Bob** | Are names honest? Are functions small? Are responsibilities separated? Any SOLID violations? | End of every phase — it is fast |
+| **Gang of Four** | Does a named pattern fit here? Am I cargo-culting one that doesn't (fake factories, singletons as globals)? | When a phase adds a new abstraction |
+
+Two rules keep audits from turning into endless refactors:
+
+1. **Reading pass, not rewriting pass.** The output of an audit is a *list of findings*, not code changes.
+2. **Every finding gets a disposition.** One of:
+   - **Blocker** — fix before closing the phase.
+   - **Backlog** — file a follow-up phase or `NOTES.md` entry.
+   - **Wontfix** — documented trade-off with a one-line reason.
+
+An audit with zero findings is suspicious. An audit with twenty findings and no dispositions is worse.
+
 ## When the hose is misbehaving
 
 Symptoms and fixes you will actually use:
@@ -218,10 +264,13 @@ Symptoms and fixes you will actually use:
 | AI says "done" but the build breaks | No exit check | Define and run a concrete check; make it re-verify |
 | Answers feel confident but subtly off | Operating beyond training (newer library version) | Feed it the actual docs or reference code; do not trust training data on moving targets |
 | Phase drifts from what the spec said | Skipped pre-flight QA | Re-run step 5 of the control loop against the current codebase before resuming |
+| Yesterday's feature stopped working after today's change | No regression test | Add a test that fails now, then fix. Do not proceed without it |
+| AI refactor "succeeded" but something subtle is off | No test on the refactored boundary | Write the golden-path e2e first; refactor under it |
 
 ## Keep reading
 
 - Next: [04-your-assignment.md](04-your-assignment.md)
-- Copy-pasteable loop prompts → [07-prompt-templates.md](07-prompt-templates.md)
+- Copy-pasteable loop prompts (including tests + audits) → [07-prompt-templates.md](07-prompt-templates.md)
+- Testing matrix and conventions → [../specs/07-testing.md](../specs/07-testing.md)
 - How to harvest and reuse working code as a "context pack" → [06-reference-as-context-pack.md](06-reference-as-context-pack.md)
 - Glossary: [05-glossary.md](05-glossary.md)
