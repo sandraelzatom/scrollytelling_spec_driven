@@ -19,6 +19,7 @@ That guide covers, in order:
 4. [Your assignment](docs/guide/04-your-assignment.md) — setup, workflow, rubric, how to submit.
 5. [Glossary](docs/guide/05-glossary.md) — every term in one place.
 6. [Reference projects as context packs](docs/guide/06-reference-as-context-pack.md) — how to harvest ideas and code from working sites (including this one's parent, [bseai_degree](https://github.com/kaw393939/bseai_degree)) into your own specs and phases. This is how you make your work reusable.
+7. [Prompt templates — the control loop](docs/guide/07-prompt-templates.md) — the seven prompts that drive planning and execution, copy-pasteable.
 
 ## Quick start
 
@@ -52,6 +53,30 @@ The idea in one paragraph: a modern AI coding assistant is a nearly unlimited su
 
 Long-form treatment of the methodology — including the garden-hose mental model for *how* to apply the pressure — lives in [docs/guide/03-working-with-ai.md](docs/guide/03-working-with-ai.md).
 
+## The control loop
+
+Every real task in this repo runs through the same seven-step loop — once for planning, then once per phase for execution. Full copy-pasteable versions live in [docs/guide/07-prompt-templates.md](docs/guide/07-prompt-templates.md).
+
+**Planning (wide → narrow):**
+
+1. **Harvest.** *"Go look at this codebase and tell me all the good ideas you can find."*
+2. **Converge.** *"Discuss. Refine. Agree on what needs done."*
+3. **Specify.** *"Go into `docs/specs/` and create as many specs as we need to cover this part of the project."*
+4. **Phase.** *"Review the specs and plan phases so that at the end we will have addressed 100% of the specs we defined."*
+
+**Per phase (before → during → after):**
+
+5. **Pre-flight QA.** *"QA `docs/phases/NN-name.md` and update it with any relevant information from the current codebase to prepare it for implementation."*
+6. **Implement.** One phase, one session, thumb on the nozzle.
+7. **Exit QA.** *"QA this phase to ensure that 100% of the phase objectives are met."*
+
+If step 7 fails, you do not move on — you loop back to step 5 (or further). That is why it is a *control loop* and not a checklist.
+
+Two ideas do most of the work:
+
+- **100% coverage as an explicit target.** Every spec has a phase; every phase objective has a runnable check. Gaps are failures.
+- **Pre-flight QA.** Reading the codebase against the plan *before* touching it catches drift before the AI has a chance to invent around it.
+
 ## Project layout
 
 ```
@@ -75,12 +100,16 @@ See [docs/phases/STATUS.md](docs/phases/STATUS.md). At the time of writing, Phas
 
 ## Continuing the build
 
-1. Read [docs/phases/README.md](docs/phases/README.md).
-2. Check `STATUS.md` for the next pending phase.
-3. Say **"implement phase N"** to your AI pair, or do it by hand.
-4. Run the phase's exit checks.
+Run the [control loop](#the-control-loop) once per phase:
+
+1. Read [docs/phases/README.md](docs/phases/README.md) and check `STATUS.md` for the next pending phase.
+2. **Pre-flight QA** the phase file against the current codebase (loop step 5).
+3. **Implement** the phase (loop step 6).
+4. **Exit QA** — run every exit check; mark pass/fail (loop step 7).
 5. Fill in the Completion notes. Update `STATUS.md`.
 6. Commit. Repeat.
+
+Copy-pasteable prompts for each step: [docs/guide/07-prompt-templates.md](docs/guide/07-prompt-templates.md).
 
 ## License
 
