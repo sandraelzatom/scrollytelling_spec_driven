@@ -15,4 +15,4 @@ I started by forking the template and looking through the source code to see how
 * **Slide 2:** The energy of playing football and the team aspect of it.
 * **Slide 3:** My interest in singing and music.
 
-It was interesting to see how much faster it is to build a "complex" UI when you're directing the AI with a specific plan rather than just guessing.
+It was interesting to see how much faster it is to build a "complex" UI when you're directing the AI with a specific plan rather than just guessing. 
