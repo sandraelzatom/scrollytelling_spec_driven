@@ -1,26 +1,27 @@
-# Scrolly — Implementation status
+# Project Status: Hobbies Scrollytelling Implementation
 
-Single source of truth for phase state. Update on every phase completion.
+## Current Phase: Phase 01 - Custom Content
+**Status:** COMPLETED ✅ 
+**Last Updated:** April 25, 2026
+
+## Executive Summary
+I have successfully ported the "Spec-Driven" workflow to create a personalized scrollytelling site. The project has moved from the initial "Scaffold" phase to a fully implemented content phase focusing on my hobbies: Reading, Football, and Singing.
+
+## Phase Progress Tracking
 
 | Phase | Title | Status | Notes |
-|---|---|---|---|
-| 00 | Scaffold | ✅ done | Next.js 16 + static export config + Actions workflow stub + assets copied |
-| 01 | Design system foundation | ⏳ pending | — |
-| 02 | Content pipeline | ⏳ pending | — |
-| 03 | Standard layout + markdown renderer | ⏳ pending | — |
-| 04 | Motion primitives | ⏳ pending | — |
-| 05 | Presentation layout | ⏳ pending | — |
-| 06 | Visualizations | ⏳ pending | — |
-| 07 | CI + deploy hardening | ⏳ pending | — |
-| 08 | Content authoring pass | ⏳ pending | — |
+| :--- | :--- | :--- | :--- |
+| 00 | Scaffold | ✅ done | Forked repo and verified Next.js build |
+| 01 | Hobby Content | ✅ done | Replaced placeholder data in `page.tsx` |
+| 02 | Documentation | ✅ done | Updated Specs and README with live links |
 
-## Legend
+## Objectives Completed
+- [x] **Spec Creation:** Defined the 3-slide hobby structure in `docs/specs/`.
+- [x] **Data Implementation:** Swapped the engine data for Reading, Football, and Singing content.
+- [x] **Visual Verification:** Confirmed that Framer Motion transitions trigger correctly on scroll.
+- [x] **Live Deployment:** Site is active and reachable via GitHub Pages.
 
-- ⏳ pending — not started
-- 🔨 in-progress — actively being implemented
-- ✅ done — exit checks passed
-- ⚠️ blocked — see phase file for details
-
-## Last updated
-
-Initialized. No phases executed yet beyond 00 (scaffold).
+## Exit QA Results
+- **Build:** `npm run build` — Success.
+- **Linting:** Standard checks passed.
+- **Manual Test:** Scrolled through all 3 sections; text overlays update as expected.
