@@ -1,5 +1,5 @@
 # Hobbies Scrollytelling Project
-**Live Site:** [https://sandraelzatom.github.io/scrollytelling_spec_driven/](https://sandraelzatom.github.io/scrollytelling_spec_driven/).
+**Live Site:** [https://sandraelzatom.github.io/scrollytelling_spec_driven/](https://sandraelzatom.github.io/scrollytelling_spec_driven/)
 
 This is a small scrollytelling project I put together for the assignment. I used the "Spec-Driven" workflow we talked about to see how it changes the way AI handles a codebase. I ended up choosing my main hobbies—reading, football, and singing—as the content for the slides.
 
